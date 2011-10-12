@@ -43,8 +43,10 @@
     <Reference Include="mscorlib, Version=0.7.0.0, Culture=neutral, PublicKeyToken=8fc0e3af5abcb6c4, processorArchitecture=MSIL" />
     <Reference Include="Script.Web" />
     <Reference Include="Script.jQuery" />
+    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Szuperosztaly.cs" />
     <Content Include="Properties\Superfluidity.ruleset" />
     <Content Include="Properties\Superfluidity.script" />
     <Compile Include="Properties\AssemblyInfo.cs" />
