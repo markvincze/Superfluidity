@@ -10,92 +10,94 @@ namespace Superfluidity
 {
     public class Renderer
     {
-        public static Renderer Instance;
-
-        public Renderer()
-        {
-            CanvasElement can = Document.GetElementById("canvas").As<CanvasElement>();
-            this.ctx = (CanvasContext2D)can.GetContext(Rendering.Render2D);
-        }
+        const int MinimapBlockSize = 10;
 
         private CanvasContext2D ctx;
+        private CanvasContext2D minimapCtx;
+        private CanvasElement minimapCanvas;
 
-        public void RenderWorld(Player player)
+        private Game game;
+
+        public Renderer(Game game)
         {
-            this.clearCanvas();
+            this.game = game;
 
-            for (int i = 0; i < World.Tiles.Length; i++)
+            CanvasElement can = Document.GetElementById("canvas").As<CanvasElement>();
+            this.ctx = (CanvasContext2D)can.GetContext(Rendering.Render2D);
+            this.initializeMinimap();
+        }
+
+        private void initializeMinimap()
+        {
+            this.minimapCanvas = Document.GetElementById("minimapCanvas").As<CanvasElement>();
+
+            this.minimapCanvas.Width = this.game.Map.GetWidth() * Renderer.MinimapBlockSize;
+            this.minimapCanvas.Height = this.game.Map.GetHeight() * Renderer.MinimapBlockSize;
+            this.minimapCanvas.Style.Width = this.minimapCanvas.Width.ToString() + "px";
+            this.minimapCanvas.Style.Height = this.minimapCanvas.Height.ToString() + "px";
+
+            this.minimapCtx = (CanvasContext2D)this.minimapCanvas.GetContext(Rendering.Render2D);
+        }
+
+        internal void DrawMinimap()
+        {
+            this.clearMinimap();
+
+            this.drawMapOnMinimap();
+
+            this.drawPlayerOnMinimap();
+        }
+
+        private void clearMinimap()
+        {
+            this.minimapCtx.ClearRect(0, 0, this.minimapCanvas.Width, this.minimapCanvas.Height);
+        }
+
+        private void drawMapOnMinimap()
+        {
+            for (int y = 0; y < this.game.Map.GetHeight(); y++)
             {
-                Tile tile = World.Tiles[i];
-
-                if (player.CanSee(tile))
+                for (int x = 0; x < this.game.Map.GetWidth(); x++)
                 {
-                    Vector p1 = convertToViewportPoint(tile.GetCorner1(), player);
-                    Vector p2 = convertToViewportPoint(tile.GetCorner2(), player);
-                    Vector p3 = convertToViewportPoint(tile.GetCorner3(), player);
-                    Vector p4 = convertToViewportPoint(tile.GetCorner4(), player);
+                    int tile = this.game.Map.Tiles[y][x];
 
-                    this.drawSquare(p1, p2, p3, p4);
+                    if (tile > 0)
+                    {
+                        this.minimapCtx.FillStyle = this.getTileFillStyle(tile);
+                        this.minimapCtx.FillRect(
+                            x * Renderer.MinimapBlockSize,
+                            y * Renderer.MinimapBlockSize,
+                            Renderer.MinimapBlockSize,
+                            Renderer.MinimapBlockSize);
+                    }
                 }
             }
         }
 
-        public Vector convertToViewportPoint(Vector point, Player player)
+        private void drawPlayerOnMinimap()
         {
-            Vector playerToPoint = new Vector(point.X - player.Position.X, point.Y - player.Position.Y);
+            Player player = this.game.player;
 
-            double viewportX = this.calculateViewportX(playerToPoint, player);
+            this.minimapCtx.FillStyle = "rgb(10, 10, 10)";
+            this.minimapCtx.FillRect(player.X * Renderer.MinimapBlockSize - 2, player.Y * MinimapBlockSize - 2, 4, 4);
 
-            double viewportY = this.calculateViewportY(playerToPoint, player);
-
-            return new Vector(viewportX * 429, viewportY * 429);
+            this.minimapCtx.BeginPath();
+            this.minimapCtx.MoveTo(player.X * Renderer.MinimapBlockSize, player.Y * Renderer.MinimapBlockSize);
+            this.minimapCtx.LineTo(
+                (player.X + Math.Cos(player.Direction) * 3) * Renderer.MinimapBlockSize,
+                (player.Y + Math.Sin(player.Direction) * 3) * Renderer.MinimapBlockSize);
+            this.minimapCtx.ClosePath();
+            this.minimapCtx.Stroke();
         }
 
-        private double calculateViewportX(Vector playerToPoint, Player player)
+        private object getTileFillStyle(int tile)
         {
-            double cosGammaInv = (playerToPoint.Abs() * player.DirectionVector.Abs()) / (Vector.Dot(playerToPoint, player.DirectionVector));
-
-            double c = Math.Sqrt(Math.Abs((cosGammaInv * cosGammaInv) - 1));
-
-            double angleDiff = Vector.SmallerAngleBetween(player.DirectionVector, playerToPoint);
-
-            if (angleDiff > 0)
+            switch(tile)
             {
-                return 0.7 + c;
+                case 1: return "rgb(100, 100, 100)";
+                case 2: return "rgb(200, 200, 200)";
+                default: return "akármi"; // lehet dobni kivételt?
             }
-            else
-            {
-                return 0.7 - c;
-            }
-        }
-
-        private double calculateViewportY(Vector playerToPoint, Player player)
-        {
-            double groundDistance = playerToPoint.Abs();
-
-            double y = 1.4 - (((groundDistance - 1) / groundDistance) - 0.3);
-
-            return y;
-        }
-
-        private void drawSquare(Vector p1, Vector p2, Vector p3, Vector p4)
-        {
-            this.ctx.FillStyle = "#0f0";
-
-            this.ctx.BeginPath();
-            this.ctx.MoveTo(p1.X, p1.Y);
-            this.ctx.LineTo(p2.X, p2.Y);
-            this.ctx.LineTo(p3.X, p3.Y);
-            this.ctx.LineTo(p4.X, p4.Y);
-            this.ctx.LineTo(p1.X, p1.Y);
-
-            this.ctx.Fill();
-            this.ctx.ClosePath();
-        }
-
-        private void clearCanvas()
-        {
-            this.ctx.ClearRect(0, 0, 600, 600);            
         }
     }
 }

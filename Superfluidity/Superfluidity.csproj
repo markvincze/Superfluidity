@@ -46,17 +46,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Default.cs" />
+    <Compile Include="Game.cs" />
     <Compile Include="KeyCodes.cs" />
+    <Compile Include="Map.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Renderer.cs" />
-    <Compile Include="Szuperosztaly.cs" />
-    <Compile Include="Tile.cs" />
     <Compile Include="Vector.cs" />
-    <Compile Include="World.cs" />
     <Content Include="Properties\Superfluidity.ruleset" />
     <Content Include="Properties\Superfluidity.script" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Class1.cs" />
   </ItemGroup>
   <Import Project="$(ProgramFiles)\ScriptSharp\v1.0\ScriptSharp.targets" />
 </Project>

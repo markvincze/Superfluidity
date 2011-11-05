@@ -316,273 +316,166 @@ Superfluidity.KeyCodes.registerEnum('Superfluidity.KeyCodes', false);
 // Superfluidity._default
 
 window._start = function Superfluidity__default$_start() {
-    var player = new Superfluidity.Player(new Superfluidity.Vector(0, 0), 45);
-    Superfluidity.World._initTiles();
-    Superfluidity.Renderer.instance = new Superfluidity.Renderer();
-    Superfluidity.Renderer.instance.renderWorld(player);
+    var game = new Superfluidity.Game();
+    game.start();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Superfluidity.Game
+
+Superfluidity.Game = function Superfluidity_Game() {
+    /// <field name="map" type="Superfluidity.Map">
+    /// </field>
+    /// <field name="player" type="Superfluidity.Player">
+    /// </field>
+    /// <field name="_renderer" type="Superfluidity.Renderer">
+    /// </field>
+    this.map = new Superfluidity.Map();
+    this._renderer = new Superfluidity.Renderer(this);
+    this.player = new Superfluidity.Player(5, 7, 1);
+}
+Superfluidity.Game.prototype = {
+    map: null,
+    player: null,
+    _renderer: null,
+    
+    start: function Superfluidity_Game$start() {
+        this._renderer._drawMinimap();
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Superfluidity.Map
+
+Superfluidity.Map = function Superfluidity_Map() {
+    /// <field name="tiles" type="Array" elementType="Array">
+    /// </field>
+    this.tiles = [ [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ], [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ], [ 1, 0, 0, 2, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ], [ 1, 0, 0, 2, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 1 ], [ 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 1 ], [ 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 1 ], [ 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 1 ], [ 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 1 ], [ 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 1 ], [ 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 1 ], [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 1 ], [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 1 ], [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 1 ], [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ], [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ] ];
+}
+Superfluidity.Map.prototype = {
+    
+    getWidth: function Superfluidity_Map$getWidth() {
+        /// <returns type="Number" integer="true"></returns>
+        return this.tiles[0].length;
+    },
+    
+    getHeight: function Superfluidity_Map$getHeight() {
+        /// <returns type="Number" integer="true"></returns>
+        return this.tiles.length;
+    }
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // Superfluidity.Player
 
-Superfluidity.Player = function Superfluidity_Player(position, directionAngle) {
-    /// <param name="position" type="Superfluidity.Vector">
+Superfluidity.Player = function Superfluidity_Player(x, y, dir) {
+    /// <param name="x" type="Number">
     /// </param>
-    /// <param name="directionAngle" type="Number">
+    /// <param name="y" type="Number">
     /// </param>
-    /// <field name="position" type="Superfluidity.Vector">
+    /// <param name="dir" type="Number">
+    /// </param>
+    /// <field name="x" type="Number">
     /// </field>
-    /// <field name="directionAngle" type="Number">
+    /// <field name="y" type="Number">
     /// </field>
-    /// <field name="directionVector" type="Superfluidity.Vector">
+    /// <field name="direction" type="Number">
     /// </field>
-    this.directionAngle = directionAngle;
-    var angleRadian = directionAngle * Math.PI / 180;
-    this.position = position;
-    this.directionVector = new Superfluidity.Vector(Math.cos(angleRadian), Math.sin(angleRadian));
-    this._initMoveHandlers();
+    this.x = x;
+    this.y = y;
+    this.direction = dir;
 }
 Superfluidity.Player.prototype = {
-    position: null,
-    directionAngle: 0,
-    directionVector: null,
-    
-    _modifyPos: function Superfluidity_Player$_modifyPos(posX, posY) {
-        /// <param name="posX" type="Number" integer="true">
-        /// </param>
-        /// <param name="posY" type="Number" integer="true">
-        /// </param>
-        this.position.x = posX;
-        this.position.y = posY;
-        Superfluidity.Renderer.instance.renderWorld(this);
-    },
-    
-    _modifyDirection: function Superfluidity_Player$_modifyDirection(directionAngle) {
-        /// <param name="directionAngle" type="Number">
-        /// </param>
-        this.directionAngle = directionAngle;
-        var angleRadian = directionAngle * Math.PI / 180;
-        this.directionVector.x = Math.cos(angleRadian);
-        this.directionVector.y = Math.sin(angleRadian);
-        Superfluidity.Renderer.instance.renderWorld(this);
-    },
-    
-    _moveForward: function Superfluidity_Player$_moveForward() {
-        this.position.x = this.position.x + this.directionVector.x * 0.1;
-        this.position.y = this.position.y + this.directionVector.y * 0.1;
-    },
-    
-    _moveBackward: function Superfluidity_Player$_moveBackward() {
-        this.position.x = this.position.x - this.directionVector.x * 0.1;
-        this.position.y = this.position.y - this.directionVector.y * 0.1;
-    },
-    
-    _turnLeft: function Superfluidity_Player$_turnLeft() {
-        this._modifyDirection(this.directionAngle + 3);
-    },
-    
-    _turnRight: function Superfluidity_Player$_turnRight() {
-        this._modifyDirection(this.directionAngle - 3);
-    },
-    
-    _initMoveHandlers: function Superfluidity_Player$_initMoveHandlers() {
-        $(document).keydown(null, ss.Delegate.create(this, function(e) {
-            switch (e.which) {
-                case Superfluidity.KeyCodes.up_arrow:
-                case Superfluidity.KeyCodes.w:
-                    this._moveForward();
-                    break;
-                case Superfluidity.KeyCodes.down_arrow:
-                case Superfluidity.KeyCodes.s:
-                    this._moveBackward();
-                    break;
-                case Superfluidity.KeyCodes.right_arrow:
-                case Superfluidity.KeyCodes.d:
-                    this._turnRight();
-                    break;
-                case Superfluidity.KeyCodes.left_arrow:
-                case Superfluidity.KeyCodes.a:
-                    this._turnLeft();
-                    break;
-            }
-            Superfluidity.Renderer.instance.renderWorld(this);
-        }));
-    },
-    
-    canSee: function Superfluidity_Player$canSee(tile) {
-        /// <param name="tile" type="Superfluidity.Tile">
-        /// </param>
-        /// <returns type="Boolean"></returns>
-        return Math.abs(Superfluidity.Vector.smallerAngleBetween(Superfluidity.Vector.subtract(tile.getCorner1(), this.position), this.directionVector)) < 45 || Math.abs(Superfluidity.Vector.smallerAngleBetween(Superfluidity.Vector.subtract(tile.getCorner2(), this.position), this.directionVector)) < 45 || Math.abs(Superfluidity.Vector.smallerAngleBetween(Superfluidity.Vector.subtract(tile.getCorner3(), this.position), this.directionVector)) < 45 || Math.abs(Superfluidity.Vector.smallerAngleBetween(Superfluidity.Vector.subtract(tile.getCorner4(), this.position), this.directionVector)) < 45;
-    }
+    x: 0,
+    y: 0,
+    direction: 0
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // Superfluidity.Renderer
 
-Superfluidity.Renderer = function Superfluidity_Renderer() {
-    /// <field name="instance" type="Superfluidity.Renderer" static="true">
+Superfluidity.Renderer = function Superfluidity_Renderer(game) {
+    /// <param name="game" type="Superfluidity.Game">
+    /// </param>
+    /// <field name="_minimapBlockSize" type="Number" integer="true" static="true">
     /// </field>
     /// <field name="_ctx" type="CanvasContext2D">
     /// </field>
+    /// <field name="_minimapCtx" type="CanvasContext2D">
+    /// </field>
+    /// <field name="_minimapCanvas" type="Object" domElement="true">
+    /// </field>
+    /// <field name="_game" type="Superfluidity.Game">
+    /// </field>
+    this._game = game;
     var can = document.getElementById('canvas');
     this._ctx = can.getContext('2d');
+    this._initializeMinimap();
 }
 Superfluidity.Renderer.prototype = {
     _ctx: null,
+    _minimapCtx: null,
+    _minimapCanvas: null,
+    _game: null,
     
-    renderWorld: function Superfluidity_Renderer$renderWorld(player) {
-        /// <param name="player" type="Superfluidity.Player">
-        /// </param>
-        this._clearCanvas();
-        for (var i = 0; i < Superfluidity.World.tiles.length; i++) {
-            var tile = Superfluidity.World.tiles[i];
-            if (player.canSee(tile)) {
-                var p1 = this.convertToViewportPoint(tile.getCorner1(), player);
-                var p2 = this.convertToViewportPoint(tile.getCorner2(), player);
-                var p3 = this.convertToViewportPoint(tile.getCorner3(), player);
-                var p4 = this.convertToViewportPoint(tile.getCorner4(), player);
-                this._drawSquare(p1, p2, p3, p4);
+    _initializeMinimap: function Superfluidity_Renderer$_initializeMinimap() {
+        this._minimapCanvas = document.getElementById('minimapCanvas');
+        this._minimapCanvas.width = this._game.map.getWidth() * 10;
+        this._minimapCanvas.height = this._game.map.getHeight() * 10;
+        this._minimapCanvas.style.width = this._minimapCanvas.width.toString() + 'px';
+        this._minimapCanvas.style.height = this._minimapCanvas.height.toString() + 'px';
+        this._minimapCtx = this._minimapCanvas.getContext('2d');
+    },
+    
+    _drawMinimap: function Superfluidity_Renderer$_drawMinimap() {
+        this._clearMinimap();
+        this._drawMapOnMinimap();
+        this._drawPlayerOnMinimap();
+    },
+    
+    _clearMinimap: function Superfluidity_Renderer$_clearMinimap() {
+        this._minimapCtx.clearRect(0, 0, this._minimapCanvas.width, this._minimapCanvas.height);
+    },
+    
+    _drawMapOnMinimap: function Superfluidity_Renderer$_drawMapOnMinimap() {
+        for (var y = 0; y < this._game.map.getHeight(); y++) {
+            for (var x = 0; x < this._game.map.getWidth(); x++) {
+                var tile = this._game.map.tiles[y][x];
+                if (tile > 0) {
+                    this._minimapCtx.fillStyle = this._getTileFillStyle(tile);
+                    this._minimapCtx.fillRect(x * 10, y * 10, 10, 10);
+                }
             }
         }
     },
     
-    convertToViewportPoint: function Superfluidity_Renderer$convertToViewportPoint(point, player) {
-        /// <param name="point" type="Superfluidity.Vector">
-        /// </param>
-        /// <param name="player" type="Superfluidity.Player">
-        /// </param>
-        /// <returns type="Superfluidity.Vector"></returns>
-        var playerToPoint = new Superfluidity.Vector(point.x - player.position.x, point.y - player.position.y);
-        var viewportX = this._calculateViewportX(playerToPoint, player);
-        var viewportY = this._calculateViewportY(playerToPoint, player);
-        return new Superfluidity.Vector(viewportX * 429, viewportY * 429);
+    _drawPlayerOnMinimap: function Superfluidity_Renderer$_drawPlayerOnMinimap() {
+        var player = this._game.player;
+        this._minimapCtx.fillStyle = 'rgb(10, 10, 10)';
+        this._minimapCtx.fillRect(player.x * 10 - 2, player.y * 10 - 2, 4, 4);
+        this._minimapCtx.beginPath();
+        this._minimapCtx.moveTo(player.x * 10, player.y * 10);
+        this._minimapCtx.lineTo((player.x + Math.cos(player.direction) * 3) * 10, (player.y + Math.sin(player.direction) * 3) * 10);
+        this._minimapCtx.closePath();
+        this._minimapCtx.stroke();
     },
     
-    _calculateViewportX: function Superfluidity_Renderer$_calculateViewportX(playerToPoint, player) {
-        /// <param name="playerToPoint" type="Superfluidity.Vector">
+    _getTileFillStyle: function Superfluidity_Renderer$_getTileFillStyle(tile) {
+        /// <param name="tile" type="Number" integer="true">
         /// </param>
-        /// <param name="player" type="Superfluidity.Player">
-        /// </param>
-        /// <returns type="Number"></returns>
-        var cosGammaInv = (playerToPoint.abs() * player.directionVector.abs()) / Superfluidity.Vector.dot(playerToPoint, player.directionVector);
-        var c = Math.sqrt(Math.abs((cosGammaInv * cosGammaInv) - 1));
-        var angleDiff = Superfluidity.Vector.smallerAngleBetween(player.directionVector, playerToPoint);
-        if (angleDiff > 0) {
-            return 0.7 + c;
+        /// <returns type="Object"></returns>
+        switch (tile) {
+            case 1:
+                return 'rgb(100, 100, 100)';
+            case 2:
+                return 'rgb(200, 200, 200)';
+            default:
+                return 'ak\ufffdrmi';
         }
-        else {
-            return 0.7 - c;
-        }
-    },
-    
-    _calculateViewportY: function Superfluidity_Renderer$_calculateViewportY(playerToPoint, player) {
-        /// <param name="playerToPoint" type="Superfluidity.Vector">
-        /// </param>
-        /// <param name="player" type="Superfluidity.Player">
-        /// </param>
-        /// <returns type="Number"></returns>
-        var groundDistance = playerToPoint.abs();
-        var y = 1.4 - (((groundDistance - 1) / groundDistance) - 0.3);
-        return y;
-    },
-    
-    _drawSquare: function Superfluidity_Renderer$_drawSquare(p1, p2, p3, p4) {
-        /// <param name="p1" type="Superfluidity.Vector">
-        /// </param>
-        /// <param name="p2" type="Superfluidity.Vector">
-        /// </param>
-        /// <param name="p3" type="Superfluidity.Vector">
-        /// </param>
-        /// <param name="p4" type="Superfluidity.Vector">
-        /// </param>
-        this._ctx.fillStyle = '#0f0';
-        this._ctx.beginPath();
-        this._ctx.moveTo(p1.x, p1.y);
-        this._ctx.lineTo(p2.x, p2.y);
-        this._ctx.lineTo(p3.x, p3.y);
-        this._ctx.lineTo(p4.x, p4.y);
-        this._ctx.lineTo(p1.x, p1.y);
-        this._ctx.fill();
-        this._ctx.closePath();
-    },
-    
-    _clearCanvas: function Superfluidity_Renderer$_clearCanvas() {
-        this._ctx.clearRect(0, 0, 600, 600);
-    }
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Superfluidity.Szuperosztaly
-
-Superfluidity.Szuperosztaly = function Superfluidity_Szuperosztaly() {
-    /// <summary>
-    /// TODO: Update summary.
-    /// </summary>
-    /// <field name="publikusMezoMertScriptSharpbanNincsPropertySajna" type="Number" integer="true">
-    /// </field>
-}
-Superfluidity.Szuperosztaly.prototype = {
-    publikusMezoMertScriptSharpbanNincsPropertySajna: 0,
-    
-    ezaztanszuperosztaly: function Superfluidity_Szuperosztaly$ezaztanszuperosztaly() {
-        this.publikusMezoMertScriptSharpbanNincsPropertySajna = 42;
-    }
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Superfluidity.Tile
-
-Superfluidity.Tile = function Superfluidity_Tile(x, y, width, height) {
-    /// <param name="x" type="Number">
-    /// </param>
-    /// <param name="y" type="Number">
-    /// </param>
-    /// <param name="width" type="Number">
-    /// </param>
-    /// <param name="height" type="Number">
-    /// </param>
-    /// <field name="_corner1" type="Superfluidity.Vector">
-    /// </field>
-    /// <field name="_corner2" type="Superfluidity.Vector">
-    /// </field>
-    /// <field name="_corner3" type="Superfluidity.Vector">
-    /// </field>
-    /// <field name="_corner4" type="Superfluidity.Vector">
-    /// </field>
-    this._corner1 = new Superfluidity.Vector(x, y);
-    this._corner2 = new Superfluidity.Vector(x, y + height);
-    this._corner3 = new Superfluidity.Vector(x + width, y + height);
-    this._corner4 = new Superfluidity.Vector(x + width, y);
-}
-Superfluidity.Tile.prototype = {
-    _corner1: null,
-    _corner2: null,
-    _corner3: null,
-    _corner4: null,
-    
-    getCorner1: function Superfluidity_Tile$getCorner1() {
-        /// <returns type="Superfluidity.Vector"></returns>
-        return this._corner1;
-    },
-    
-    getCorner2: function Superfluidity_Tile$getCorner2() {
-        /// <returns type="Superfluidity.Vector"></returns>
-        return this._corner2;
-    },
-    
-    getCorner3: function Superfluidity_Tile$getCorner3() {
-        /// <returns type="Superfluidity.Vector"></returns>
-        return this._corner3;
-    },
-    
-    getCorner4: function Superfluidity_Tile$getCorner4() {
-        /// <returns type="Superfluidity.Vector"></returns>
-        return this._corner4;
     }
 }
 
@@ -662,50 +555,17 @@ Superfluidity.Vector.prototype = {
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
-// Superfluidity.World
-
-Superfluidity.World = function Superfluidity_World() {
-    /// <field name="tiles" type="Array" elementType="Tile" static="true">
-    /// </field>
-}
-Superfluidity.World._initTiles = function Superfluidity_World$_initTiles() {
-    var flip = true;
-    var cnt = 0;
-    Superfluidity.World.tiles = new Array(45);
-    for (var i = -10; i < 10; i++) {
-        for (var j = -10; j < 9; j++) {
-            if (flip) {
-                var tile = new Superfluidity.Tile(i, j, 1, 1);
-                Superfluidity.World.tiles[cnt++] = tile;
-            }
-            flip = !flip;
-        }
-    }
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Superfluidity.Class1
-
-Superfluidity.Class1 = function Superfluidity_Class1() {
-}
-
-
+Superfluidity.Game.registerClass('Superfluidity.Game');
+Superfluidity.Map.registerClass('Superfluidity.Map');
 Superfluidity.Player.registerClass('Superfluidity.Player');
 Superfluidity.Renderer.registerClass('Superfluidity.Renderer');
-Superfluidity.Szuperosztaly.registerClass('Superfluidity.Szuperosztaly');
-Superfluidity.Tile.registerClass('Superfluidity.Tile');
 Superfluidity.Vector.registerClass('Superfluidity.Vector');
-Superfluidity.World.registerClass('Superfluidity.World');
-Superfluidity.Class1.registerClass('Superfluidity.Class1');
 (function () {
     $(function() {
         _start();
     });
 })();
-Superfluidity.Renderer.instance = null;
-Superfluidity.World.tiles = null;
+Superfluidity.Renderer._minimapBlockSize = 10;
 })(jQuery);
 
 //! This script was generated using Script# v0.7.3.0
